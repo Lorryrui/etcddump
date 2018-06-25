@@ -36,6 +36,12 @@ Usage is really simple and has been thought so that it resembles how most dumper
     # dump to stdout
     etcdumper dump https://etcd.example.com:4001
 
+    # vim ~/.bash_profile, SSL file path, from env variables
+    ETCD_SSL_CER="/Users/Lorryrui/etcd.pem"
+    ETCD_SSL_KEY="/Users/Lorryrui/etcd.key"
+    export ETCD_SSL_CER
+    export ETCD_SSL_KEY
+
     # dump to file
     etcdumper --file dump.json dump https://etcd.example.com:4001
 

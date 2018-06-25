@@ -2,6 +2,7 @@ from urlparse import urlparse
 import etcd
 import json
 import sys
+import os
 
 
 class BaseOperations(object):
@@ -10,10 +11,15 @@ class BaseOperations(object):
         self.get_client(url)
 
 
-    def get_client(self, url, ca_cert=None, cert=None):
+    def get_client(self, url,cert=None):
         parsed = urlparse(url)
         (h, p) = parsed.netloc.split(':')
-        self.client = etcd.Client(host=h, port=int(p), protocol=parsed.scheme, allow_reconnect=False, ca_cert=ca_cert, cert=cert)
+
+        # SSL certificate, env variables
+        if parsed.scheme == 'https':
+            cert = (os.getenv('ETCD_SSL_CER'),os.getenv('ETCD_SSL_KEY'))
+
+        self.client = etcd.Client(host=h, port=int(p), protocol=parsed.scheme, allow_reconnect=False, cert=cert)
 
     def entry_from_result(self, entry):
         return {
@@ -78,4 +84,4 @@ class Restorer(BaseOperations):
         return idx
 
     def write(self, entry):
-	return self.client.write(entry['key'].encode('utf-8'), entry['value'].encode('utf-8'), ttl = entry['ttl'], dir = entry['dir'])        
+        return self.client.write(entry['key'].encode('utf-8'), entry['value'].encode('utf-8'), ttl = entry['ttl'], dir = entry['dir'])
