@@ -18,4 +18,4 @@ def main(**kw):
         cl.dump(filename=args.file)
     elif args.action == 'restore':
         cl = operations.Restorer(url=args.host)
-        cl.restore(filename=args.file, preserve_indexes=args.preserve_indexes)
+        cl.restore(filename=args.file)
